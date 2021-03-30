@@ -37,11 +37,11 @@ class ScoreManager
         return $this->_logger->print_logs( $div );
     }
 
-    public function get_classement ( $saison, $structure, $arme, $discipline, $cat, $sexe, $crit ){
-        return $this->_bdd->get_classement( $saison, $structure, $arme, $discipline, $cat, $sexe, $crit );
+    public function get_scores ( $saison, $structure, $arme, $discipline, $cat, $sexe ){
+        return $this->_bdd->get_scores( $saison, $structure, $arme, $discipline, $cat, $sexe );
     }
 
-    public function trier_scores ( $scores, $crit ){
+    public function trier_scores ( &$scores, $crit ){
         $cpt = 0;
         foreach ($scores as $score) {
             $score["CLASSEMENT"] = $cpt;

@@ -37,34 +37,29 @@ class BDD
 
     public function create_table_scores(){
 
-        $this->_pdo->query("DROP TABLE IF EXISTS SCORES") or die("Error to DROP SCORES");
+        //$this->_pdo->query("DROP TABLE IF EXISTS SCORES") or die("Error to DROP SCORES");
 
-        $query = "CREATE TABLE SCORES(
-            NOM TEXT NOT NULL,
-            PRENOM TEXT NOT NULL,
-            NO_LICENCE TEXT NOT NULL,
-
-            SAISON INT NOT NULL,
-            DATE_SCORE TEXT NOT NULL,
-
-            SEXE TEXT NOT NULL,
-            CAT TEXT NOT NULL,
-            CODE_STRUCTURE text NOT NULL,
-            REGION text NOT NULL,
-            DEPARTEMENT text NOT NULL,
-            DISCIPLINE text NOT NULL,
-            ARME text NOT NULL,
-            SCORE int NOT NULL,
-
-            LIEU_CONCOURS text NOT NULL,
-
-            DISTANCE int NOT NULL,
-            BLASON int NOT NULL,
-
-            NUM_DEPART int NOT NULL,
-
-            PRIMARY KEY (NO_LICENCE, DATE_SCORE, LIEU_CONCOURS, NUM_DEPART, DISCIPLINE, ARME) )";
-        $this->_pdo->query($query) or die("Error to CREATE RESULTS");
+        $query = 'CREATE TABLE IF NOT EXISTS SCORES(
+            "NOM" TEXT NOT NULL,
+            "PRENOM" TEXT NOT NULL,
+            "NO_LICENCE" TEXT NOT NULL,
+            "SAISON" INT NOT NULL,
+            "DATE_SCORE" TEXT NOT NULL,
+            "SEXE" TEXT NOT NULL,
+            "CAT" TEXT NOT NULL,
+            "CODE_STRUCTURE" text NOT NULL,
+            "REGION" text NOT NULL,
+            "DEPARTEMENT" text NOT NULL,
+            "DISCIPLINE" text NOT NULL,
+            "ARME" text NOT NULL,
+            "SCORE" int NOT NULL,
+            "LIEU_CONCOURS" text NOT NULL,
+            "DISTANCE" int NOT NULL,
+            "BLASON" int NOT NULL,
+            "NUM_DEPART" int NOT NULL,
+            PRIMARY KEY ("NO_LICENCE", "DATE_SCORE", "DISCIPLINE", "ARME", "LIEU_CONCOURS", "NUM_DEPART") )';
+        $this->_pdo->query($query) or die("Error to CREATE SCORES");
+        echo "Creation table SCORES <br>";
     }
 
 
@@ -121,10 +116,11 @@ class BDD
     }
 
 
-    public function get_classement ( $saison, $structure, $arme, $discipline, $cat, $sexe, $crit ){
-        $query_scores = "SELECT NOM, PRENOM, NO_LICENCE, SCORE  FROM SCORES WHERE ";
+    public function get_scores ( $saison, $structure, $arme, $discipline, $cat, $sexe )
+    {
+        $query_scores = "SELECT * FROM SCORES WHERE ";
 
-        if($saison){
+        if($saison >0){
             $query_scores .= "SAISON=:SAISON AND ";
         }
 
@@ -144,18 +140,20 @@ class BDD
             $query_scores .= "DISCIPLINE=:DISCIPLINE AND ";
         }
 
-        if($cat){
+        if ($cat == 'SJ') {
+            $query_scores .= "CAT IN ('J','S1','S2','S3') AND ";
+        } elseif( $cat && ($cat != "T") ){
             $query_scores .= "CAT=:CAT AND ";
         }
 
         if($sexe && $sexe != "M"){
             $query_scores .= "SEXE=:SEXE AND ";
         }
-        $query_scores .= "1 GROUP BY NO_LICENCE ORDER BY SCORE DESC";
+        $query_scores .= "1 ORDER BY NO_LICENCE DESC";
 
         $sth_scores = $this->_pdo->prepare($query_scores);
 
-        if($saison){
+        if($saison>0){
             $sth_scores->bindValue(":SAISON", $saison);
         }
 
@@ -175,7 +173,7 @@ class BDD
             $sth_scores->bindValue(":DISCIPLINE", $discipline);
         }
 
-        if($cat){
+        if($cat && $cat != "T" && $cat != "SJ"){
             $sth_scores->bindValue(":CAT", $cat);
         }
 
