@@ -33,13 +33,13 @@ class Sorter
                 // Moyenne sur 2 meilleurs scores
                 rsort($scores_values);
                 $selected_scores = array_slice($scores_values, 0, 2);
-                $score["SCORE"] = array_sum($scores_values) / 2;
+                $score["SCORE"] = round(array_sum($scores_values) / 2);
                 $score["SCORES"] = implode($selected_scores, ',');
             } else if ($crit == 3){
                 // Moyenne sur 2 meilleurs scores
                 rsort($scores_values);
                 $selected_scores = array_slice($scores_values, 0, 3);
-                $score["SCORE"] = array_sum($scores_values) / 3;
+                $score["SCORE"] = round(array_sum($scores_values) / 3);
                 $score["SCORES"] = implode($selected_scores, ',');
             }
 
