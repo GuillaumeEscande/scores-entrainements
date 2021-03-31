@@ -118,7 +118,7 @@ class BDD
 
     public function get_scores ( $saison, $structure, $arme, $discipline, $cat, $sexe )
     {
-        $query_scores = "SELECT * FROM SCORES WHERE ";
+        $query_scores = "SELECT NOM, PRENOM, NO_LICENCE, CAT, SEXE, ARME, GROUP_CONCAT(SCORE, ',') as SCORES FROM SCORES WHERE ";
 
         if($saison >0){
             $query_scores .= "SAISON=:SAISON AND ";
@@ -149,7 +149,7 @@ class BDD
         if($sexe && $sexe != "M"){
             $query_scores .= "SEXE=:SEXE AND ";
         }
-        $query_scores .= "1 ORDER BY NO_LICENCE DESC";
+        $query_scores .= "1 GROUP BY NO_LICENCE ORDER BY NO_LICENCE";
 
         $sth_scores = $this->_pdo->prepare($query_scores);
 

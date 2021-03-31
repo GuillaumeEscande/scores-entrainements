@@ -4,6 +4,7 @@ include_once "lib/configuration.php";
 include_once "lib/bdd.php";
 include_once "lib/importer.php";
 include_once "lib/logger.php";
+include_once "lib/sorter.php";
 
 class ScoreManager
 {
@@ -12,6 +13,7 @@ class ScoreManager
     private $_bdd = NULL;
     private $_importer = NULL;
     private $_logger = NULL;
+    private $_sorter = NULL;
 
     public function __construct($conf_file_name)
     {
@@ -20,6 +22,7 @@ class ScoreManager
         $this->_logger = new Logger( $this->_configuration );
         $this->_bdd = new BDD( $this->_configuration );
         $this->_importer = new Importer( $this->_configuration );
+        $this->_sorter = new Sorter( $this->_configuration );
 
 
     }
@@ -37,17 +40,9 @@ class ScoreManager
         return $this->_logger->print_logs( $div );
     }
 
-    public function get_scores ( $saison, $structure, $arme, $discipline, $cat, $sexe ){
-        return $this->_bdd->get_scores( $saison, $structure, $arme, $discipline, $cat, $sexe );
-    }
-
-    public function trier_scores ( &$scores, $crit ){
-        $cpt = 0;
-        foreach ($scores as $score) {
-            $score["CLASSEMENT"] = $cpt;
-            $cpt++;
-        }
-        return $scores;
+    public function get_classement ( $saison, $structure, $arme, $discipline, $cat, $sexe, $crit ){
+        $scores = $this->_bdd->get_scores( $saison, $structure, $arme, $discipline, $cat, $sexe );
+        return $this->_sorter->get_classement( $scores, $crit );
     }
 
 

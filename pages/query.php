@@ -227,8 +227,7 @@ if( $lister )
 {
 
   echo "<a href='".$strArg='?saison=' . $saison . '&structure=' . $structure . '&discipline=' . $discipline . '&arme=' . $arme . '&sexe=' . $sexe . '&cat=' . $cat . '&crit=' . $crit . '&lister=' . $lister . "'> Lien rapide <a/> </br>";
-  $scores = $manager->get_scores($saison, $structure, $arme, $discipline, $cat, $sexe);
-  $classements = $manager->trier_scores($scores, $crit);
+  $classements = $manager->get_classement($saison, $structure, $arme, $discipline, $cat, $sexe, $crit);
 
   echo "</br>";
   echo "</br>";
@@ -237,13 +236,13 @@ if( $lister )
 ?>
     <table>
       <tr>
+        <td> Classement </td>
         <td> Nom </td>
         <td> Prénom </td>
         <td> Licence </td>
         <td> Cat. </td>
-        <td> Score </td>
-        <td> date </td>
-        <!--  td> Classement </td -->
+        <td> Score calculé </td>
+        <td> Scores pris en compte </td>
       </tr>
 <?php
 
@@ -251,6 +250,9 @@ if( $lister )
     {
       echo "<tr>";
 
+      echo "<td>";
+      echo $classement['CLASSEMENT'];
+      echo "</td>";
       echo "<td>";
       echo $classement['NOM'];
       echo "</td>";
@@ -267,9 +269,7 @@ if( $lister )
       echo $classement['SCORE'];
       echo "</td>";
       echo "<td>";
-      // l'index ['CLASSEMENT'] n'est pas reconnu
-      //echo $classement['CLASSEMENT']; // 
-      echo $classement['DATE_SCORE']." ".$classement['LIEU_CONCOURS'];
+      echo $classement['SCORES'];
       echo "</td>";
 
       echo "</tr>";
